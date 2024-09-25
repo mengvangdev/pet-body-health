@@ -1,6 +1,9 @@
+import 'package:pet_body_health/providers/pet_health_provider.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences sharedPref = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
       providers: [
@@ -15,6 +18,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => BleProvider(context),
         ),
+        ChangeNotifierProvider(
+          create: (context) => PetHealthProvider(sharedPref),
+        )
       ],
       child: const App(),
     ),

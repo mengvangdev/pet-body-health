@@ -6,7 +6,7 @@ class BleProvider extends ChangeNotifier {
   BleProvider(this.context);
   final BuildContext context;
 
-  late BluetoothDevice device;
+  // late BluetoothDevice device;
 
   // this variable is checked when user turns off the Bluetooth adapter from the system.
   BlueState turnOffState = BlueState.none;
@@ -88,7 +88,7 @@ class BleProvider extends ChangeNotifier {
           */
           ScanResult nearest = results.reduce((currently, nextElement) =>
               currently.rssi > nextElement.rssi ? currently : nextElement);
-          device = nearest.device;
+          BluetoothDevice device = nearest.device;
 
           // Enable auto connect
           await device.connect(autoConnect: true, mtu: null);
@@ -100,7 +100,7 @@ class BleProvider extends ChangeNotifier {
               .then((_) {
             FlutterBluePlus.stopScan();
           });
-
+          log("scan result");
           // listen when device is connected or disconnected
           _listenConnection();
         }
@@ -110,24 +110,28 @@ class BleProvider extends ChangeNotifier {
     FlutterBluePlus.cancelWhenScanComplete(onScan);
   }
 
-  void _listenConnection() {
-    device.connectionState.listen(
+  void _listenConnection() async {
+    FlutterBluePlus.connectedDevices.first.connectionState.listen(
       (state) {
         if (state == BluetoothConnectionState.connected) {
           _writeCharacteristic("real");
           _connected = true;
+          log("length devices true: ${FlutterBluePlus.connectedDevices.length}");
         }
         if (state == BluetoothConnectionState.disconnected) {
           _connected = false;
           context.read<PetProvider>().petData.clear();
+          log("length devices false: ${FlutterBluePlus.connectedDevices.length}");
         }
         notifyListeners();
+        log("listen connectState $_connected");
+        log("-------------------");
       },
     );
   }
 
   void _disConnect() async {
-    await device.disconnect();
+    await FlutterBluePlus.connectedDevices.first.disconnect();
   }
 
   // Send data to device
@@ -136,9 +140,11 @@ class BleProvider extends ChangeNotifier {
     if (messageBytes != null) {
       // Request larger MTU size
       // Response has 20 bytes that is default
-      await device.requestMtu(512);
+      // await device.requestMtu(512);
+      await FlutterBluePlus.connectedDevices.first.requestMtu(512);
 
-      List<BluetoothService> services = await device.discoverServices();
+      List<BluetoothService> services =
+          await FlutterBluePlus.connectedDevices.first.discoverServices();
       if (services.isNotEmpty) {
         for (var service in services) {
           for (var character in service.characteristics) {
@@ -240,11 +246,15 @@ class BleProvider extends ChangeNotifier {
   }
 
   void loadData() {
-    _writeCharacteristic("real");
+    if (_connected) {
+      _writeCharacteristic("real");
+    }
   }
 
   void saveData() {
-    _writeCharacteristic("save");
-    log("write save");
+    if (_connected) {
+      _writeCharacteristic("save");
+      log("write save");
+    }
   }
 }

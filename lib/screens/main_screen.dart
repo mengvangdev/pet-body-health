@@ -20,17 +20,20 @@ class _MainScreenState extends State<MainScreen> {
   final _weightController = TextEditingController();
   final _gaitController = TextEditingController();
   var activityController = TextEditingController();
+  final _hartBeatController = TextEditingController();
   var hartController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
-    return Consumer2<PetProvider, BleProvider>(
-      builder: (context, petProvider, bleProvider, child) {
+    return Consumer3<BleProvider, PetProvider, PetHealthProvider>(
+      builder: (context, bleProvider, petProvider, petHealthProvider, child) {
+        late Pet petData;
         if (petProvider.petData.isNotEmpty) {
-          activityController.text =
-              petProvider.petData.last.activity.toString();
-          hartController.text = petProvider.petData.last.hart.toString();
+          petData = petProvider.petData.last;
+          activityController.text = petData.activity.toString();
+          hartController.text = petData.hart.toString();
         }
         log("main_screen bluetooth state: ${bleProvider.connected}");
         return GestureDetector(
@@ -343,7 +346,7 @@ class _MainScreenState extends State<MainScreen> {
                               SizedBox(
                                 width: widthScreen * 0.45,
                                 child: textFormField(
-                                    controller: _gaitController,
+                                    controller: _hartBeatController,
                                     readOnly: true,
                                     textInputType: TextInputType.number),
                               ),
@@ -413,7 +416,42 @@ class _MainScreenState extends State<MainScreen> {
                                 style: TextStyle(fontSize: 24),
                               ),
                               onPressed: () {
-                                bleProvider.saveData();
+                                // bleProvider.saveData();
+
+                                var type = _typeController.text;
+                                var gender = selectedGender!;
+                                var age = int.parse(_ageController.text);
+                                var size = selectedSize!;
+                                var weight =
+                                    double.parse(_weightController.text);
+                                var gait = int.parse(_gaitController.text);
+                                var axis = GaitAxis(
+                                    gx: petData.gaitAxis.gx,
+                                    gy: petData.gaitAxis.gy,
+                                    gz: petData.gaitAxis.gz);
+                                var activity = petData.activity;
+                                var hartBeat =
+                                    double.parse(_hartBeatController.text);
+                                var hart = petData.hart;
+                                var pulse = petData.pulse;
+                                var description = _descriptionController.text;
+
+                                PetHealth petHealth = PetHealth(
+                                  type: type,
+                                  gender: gender,
+                                  age: age,
+                                  size: size,
+                                  weight: weight,
+                                  gait: gait,
+                                  axis: axis,
+                                  activity: activity,
+                                  hartBeat: hartBeat,
+                                  hart: hart,
+                                  pulse: pulse,
+                                  description: description,
+                                  createdAt: DateTime.now(),
+                                );
+                                petHealthProvider.add(petHealth);
                               },
                             ),
                           ),
