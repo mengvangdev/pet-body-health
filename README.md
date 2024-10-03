@@ -18,6 +18,7 @@ this app connect only device name "UART Service". because it is automatic connec
 - on 7# desciption: Gait: Displayed in numbers (press the measurement button to get data from hardware). form or UI has gait (걸음걸이), but on device doesn't have gait data, and I am still confused about it. 
 - form has Heart Rate or Hart beat (심박수), but on device doesn't have Heart Rate
 - 심박상황 is Hart in real device or not, see at orange circle mark.
+- last, I need to know range number hart and activity.
 
 <img src="./README assets/images/explain-field.png" width="600">
 
