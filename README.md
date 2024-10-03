@@ -3,12 +3,12 @@
 ### Connect Device
 this app connect only device name "UART Service". because it is automatic connection, No select device screen like this:
 
-<img src="README assets/images/select-device-screen.png" width="200" height="300">
+<img src="./README assets/images/select-device-screen.png" width="200" height="300">
 
 ### Problem on Form Screen
 
-<img src="ReadMe assets/images/form-screen.jpeg" width="300">
-<img src="ReadMe assets/images/real-device.jpeg" width="300" height="300">
+<img src="./README assets/images/form-screen.jpeg" width="300">
+<img src="./README assets/images/real-device.jpeg" width="300" height="300">
 
 <br>
 <br>
@@ -19,7 +19,7 @@ this app connect only device name "UART Service". because it is automatic connec
 - form has Heart Rate or Hart beat (심박수), but on device doesn't have Heart Rate
 - 심박상황 is Hart in real device or not, see at orange circle mark.
 
-<img src="ReadMe assets/images/explain-field.png" width="600">
+<img src="./README assets/images/explain-field.png" width="600">
 
 
 ### Save Data
