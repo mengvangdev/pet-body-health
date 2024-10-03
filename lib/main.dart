@@ -1,4 +1,3 @@
-import 'package:pet_body_health/providers/pet_health_provider.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
 void main() async {
@@ -12,6 +11,7 @@ void main() async {
          to BleProiver
          Tip: check on Widget Inspector or Widget Tree 
         */
+
         ChangeNotifierProvider(
           create: (context) => PetProvider(),
         ),

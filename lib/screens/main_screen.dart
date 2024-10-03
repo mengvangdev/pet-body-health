@@ -451,7 +451,7 @@ class _MainScreenState extends State<MainScreen> {
                                   description: description,
                                   createdAt: DateTime.now(),
                                 );
-                                petHealthProvider.add(petHealth);
+                                petHealthProvider.write(petHealth);
                               },
                             ),
                           ),
