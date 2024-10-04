@@ -8,9 +8,6 @@ class ChartScreen extends StatelessWidget {
     return Consumer<BleProvider>(
       builder: (context, bleProvider, child) {
         final connected = bleProvider.connected;
-        // final activity = petProvider.petData.last.activity;
-        // final pulse = petProvider.petData.last.pulse;
-        // final hart = petProvider.petData.last.hart;
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:pet_body_health/constants/app_colors.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
@@ -21,11 +19,8 @@ class _TemperatureLineChartState extends State<TemperatureLineChart> {
         if (bleProvider.connected && petProvider.petData.isNotEmpty) {
           final temperature = petProvider.petData.last.temperature;
           final temperatures = petProvider.temperatures;
-          final minY = petProvider.minY;
-          final maxY = petProvider.maxY;
-
-          log(petProvider.petData.length.toString());
-          log("temps: ${petProvider.temperatures}");
+          final minY = petProvider.tempMinY;
+          final maxY = petProvider.tempMaxY;
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -34,7 +29,7 @@ class _TemperatureLineChartState extends State<TemperatureLineChart> {
               children: [
                 const SizedBox(height: 12),
                 Text(
-                  '온도: $temperature',
+                  '온도 : $temperature',
                   style: const TextStyle(
                     color: Colors.green,
                     fontSize: 18,
@@ -55,7 +50,8 @@ class _TemperatureLineChartState extends State<TemperatureLineChart> {
                         minX: temperatures.first.x,
                         maxX: temperatures.last.x,
                         lineTouchData: const LineTouchData(enabled: false),
-                        clipData: const FlClipData.all(),
+                        clipData: const FlClipData.none(),
+
                         gridData: FlGridData(
                           show: true,
                           drawVerticalLine: false,
@@ -173,6 +169,7 @@ class _TemperatureLineChartState extends State<TemperatureLineChart> {
       ),
       barWidth: 3,
       isCurved: true,
+      // isStrokeCapRound: true,
     );
   }
 }

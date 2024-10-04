@@ -1,4 +1,7 @@
 import 'package:pet_body_health/resources/resources.dart';
+import 'package:pet_body_health/widgets/line_charts/activity_line_chart.dart';
+import 'package:pet_body_health/widgets/line_charts/hart_line_chart.dart';
+import 'package:pet_body_health/widgets/line_charts/pulse_line_chart.dart';
 
 class PetData extends StatelessWidget {
   const PetData({
@@ -19,6 +22,9 @@ class PetData extends StatelessWidget {
             child: Column(
               children: [
                 const TemperatureLineChart(),
+                const ActivityLineChart(),
+                const HartLineChart(),
+                const PusleLineChart(),
                 const SizedBox(height: 20),
                 Text("activity : $activity"),
                 Text("pulse : $pulse"),
@@ -26,16 +32,6 @@ class PetData extends StatelessWidget {
                 Text("Gx : ${gaitAxis.gx}"),
                 Text("Gy : ${gaitAxis.gy}"),
                 Text("Gz : ${gaitAxis.gz}"),
-
-                // RadarChart(),
-                // ThreeDAxis(),
-                // Temperature2(),
-                // LineChartSample2(),
-                // SizedBox(height: 20),
-                // LineChartSample5(),
-
-                // HeartRate(),
-                // HeartState(),
               ],
             ),
           );

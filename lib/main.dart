@@ -1,4 +1,5 @@
 import 'package:pet_body_health/resources/resources.dart';
+import 'package:pet_body_health/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -10,7 +10,7 @@ export 'package:shared_preferences/shared_preferences.dart';
 
 // screen
 export 'package:pet_body_health/screens/chart_screen.dart';
-export 'package:pet_body_health/screens/main_screen.dart';
+export 'package:pet_body_health/screens/form_screen.dart';
 // widget
 export 'package:pet_body_health/widgets/pet_data.dart';
 export 'package:pet_body_health/widgets/line_charts/temperature_line_chart.dart';

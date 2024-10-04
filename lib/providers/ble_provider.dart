@@ -120,7 +120,7 @@ class BleProvider extends ChangeNotifier {
         }
         if (state == BluetoothConnectionState.disconnected) {
           _connected = false;
-          context.read<PetProvider>().petData.clear();
+          context.read<PetProvider>().removeData();
           log("length devices false: ${FlutterBluePlus.connectedDevices.length}");
         }
         notifyListeners();
@@ -218,7 +218,7 @@ class BleProvider extends ChangeNotifier {
       );
       final petProvider = context.read<PetProvider>();
       petProvider.petData.add(pet);
-      petProvider.temperatureGraph();
+      petProvider.setGraph();
     }
   }
 

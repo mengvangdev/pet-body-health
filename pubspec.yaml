@@ -8,10 +8,12 @@ environment:
 
 dependencies:
   dropdown_button2: ^2.3.9
+  expansion_tile_group: ^2.1.0
   fl_chart: ^0.69.0
   flutter:
     sdk: flutter
   flutter_blue_plus: ^1.32.12
+  getwidget: ^4.0.0
   icons_launcher: ^3.0.0
   provider: ^6.1.2
   shared_preferences: ^2.3.2
@@ -32,9 +34,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/bluetooth-off.png
-    - assets/icons/bluetooth-off-1.png
-    - assets/icons/bluetooth-off-2.png
-    - assets/icons/bluetooth-off-3.png
     - assets/icons/bluetooth-on.png
     - assets/icons/line-chart.png
     - assets/icons/logo.png
