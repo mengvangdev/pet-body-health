@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'dart:developer';
 import 'package:pet_body_health/resources/resources.dart';
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -10,12 +8,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isCollapsed = true;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PetProvider, BleProvider>(
-        builder: (context, petProvider, bleProvider, child) {
+    return Consumer3<PetProvider, PetHealthProvider, BleProvider>(
+        builder: (context, petProvider, petHealthProvider, bleProvider, child) {
+
       return Scaffold(
         appBar: AppBar(
           title: const Text("펫케어"),
@@ -59,110 +57,15 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: themeColor, // Background color of the card
-                      borderRadius: BorderRadius.circular(8), // Rounded corners
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3), // Position of the shadow
-                        ),
-                      ],
-                    ),
-                    child: GFAccordion(
-                      onToggleCollapsed: (isCollapsed) {
-                        setState(() {
-                          this.isCollapsed = !isCollapsed;
-                        });
-                      },
-                      collapsedTitleBackgroundColor: themeColor,
-                      expandedTitleBackgroundColor: Colors.white,
-                      titleBorderRadius: BorderRadius.circular(8),
-                      titleChild: Container(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          "Cat",
-                          style: TextStyle(
-                            color: isCollapsed ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ),
-                      collapsedIcon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                      expandedIcon: const Icon(
-                        Icons.keyboard_arrow_up,
-                        size: 24,
-                        color: Colors.black,
-                      ),
-                      contentBackgroundColor: themeColor,
-                      contentChild: SizedBox(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    detail(title: "성별", data: "암컷"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "크기", data: "소"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "걸음걸이", data: "없어요"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "삼박수", data: "없어요"),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    detail(title: "나이", data: "2"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "무게", data: "4"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "활동량", data: "5"),
-                                    const SizedBox(height: 5),
-                                    detail(title: "심박상황", data: "2"),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            const Divider(
-                              color: Colors.white,
-                              thickness: 2,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: description(
-                                      title: "상태 저장",
-                                      data:
-                                          "1. 강아지가 잠을 자고 있을 때 규칙적으로 숨을 들이 마시고 내시는 것을 관찰합시다. 2. 들이마시고 내시는 것을 1회로 1분 동안 측정합니다."),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        body: petHealthProvider.petHealthData.isNotEmpty ? ListView.builder(
+          itemCount: petHealthProvider.petHealthData.length,
+          itemBuilder: (context, index) {
+            var petHealthSnapshot = petHealthProvider.petHealthData[index];
+            return DataListView(petHealth: petHealthSnapshot);
+        }) : Center(child: LoadingAnimationWidget.fourRotatingDots(
+      color: themeColor,
+      size: 40,
+    ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -180,11 +83,140 @@ class _MainScreenState extends State<MainScreen> {
             size: 24,
           ),
         ),
-      );
+      ) ;
     });
   }
 
-  Widget detail({required String title, required String data}) {
+
+}
+
+class DataListView extends StatefulWidget {
+  const DataListView({
+    super.key,
+    required this.petHealth
+  });
+
+  final PetHealth petHealth;
+
+  @override
+  State<DataListView> createState() => _DataListViewState();
+}
+
+class _DataListViewState extends State<DataListView> {
+
+  bool isCollapsed = true;
+  @override
+  Widget build(BuildContext context) {
+            var data = widget.petHealth;
+            return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: themeColor, // Background color of the card
+                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3), // Position of the shadow
+                      ),
+                    ],
+                  ),
+                  child: GFAccordion(
+                    onToggleCollapsed: (isCollapsed) {
+                      setState(() {
+                        isCollapsed = !isCollapsed;
+                      });
+                    },
+                    collapsedTitleBackgroundColor: themeColor,
+                    expandedTitleBackgroundColor: Colors.white,
+                    titleBorderRadius: BorderRadius.circular(8),
+                    titleChild: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        data.type,
+                        style: TextStyle(
+                          color: isCollapsed ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                    collapsedIcon: const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 24,
+                      color: Colors.white,
+                    ),
+                    expandedIcon: const Icon(
+                      Icons.keyboard_arrow_up,
+                      size: 24,
+                      color: Colors.black,
+                    ),
+                    contentBackgroundColor: themeColor,
+                    contentChild: SizedBox(
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  detail(title: "성별", data: data.gender),
+                                  const SizedBox(height: 5),
+                                  detail(title: "크기", data: data.size),
+                                  const SizedBox(height: 5),
+                                  detail(title: "걸음걸이", data: data.gait.toString()),
+                                  const SizedBox(height: 5),
+                                  detail(title: "맥박", data: data.pulse.toString()),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  detail(title: "나이", data: data.age.toString()),
+                                  const SizedBox(height: 5),
+                                  detail(title: "무게", data: data.weight.toString()),
+                                  const SizedBox(height: 5),
+                                  detail(title: "활동량", data: data.activity.toString()),
+                                  const SizedBox(height: 5),
+                                  detail(title: "심박상황", data: data.hart.toString()),
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                            data.description!.isNotEmpty ? 
+                          const Divider(
+                            color: Colors.white,
+                            thickness: 2,
+                          ): Container(),
+                               data.description!.isNotEmpty ? 
+                          Row(
+                            children: [
+                              Expanded(
+                                child: description(
+                                    title: "상태 저장",
+                                    data: data.description!,),
+                              ),
+                            ],
+                          ) : Container(),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+       
+       
+        
+  }
+
+    Widget detail({required String title, required String data}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -229,4 +261,7 @@ class _MainScreenState extends State<MainScreen> {
       ],
     );
   }
+
 }
+
+

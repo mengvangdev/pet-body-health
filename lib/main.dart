@@ -12,7 +12,6 @@ void main() async {
          to BleProiver
          Tip: check on Widget Inspector or Widget Tree 
         */
-
         ChangeNotifierProvider(
           create: (context) => PetProvider(),
         ),

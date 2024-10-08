@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:flutter/services.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
 const List<String> sizeItems = ['소', '중', '대'];
@@ -261,43 +260,54 @@ class _FormScreenState extends State<FormScreen> {
                                 ),
                                 onPressed: () {
                                   // bleProvider.saveData();
-                                  if (_formKey.currentState!.validate()) {
+                                  // if (_formKey.currentState!.validate()) {
                                     log("_formKey");
-                                  }
-                                  // var type = _typeController.text;
-                                  // var gender = selectedGender!;
-                                  // var age = int.parse(_ageController.text);
-                                  // var size = selectedSize!;
-                                  // var weight =
-                                  //     double.parse(_weightController.text);
-                                  // var gait = int.parse(_gaitController.text);
-                                  // var axis = GaitAxis(
-                                  //     gx: petData.gaitAxis.gx,
-                                  //     gy: petData.gaitAxis.gy,
-                                  //     gz: petData.gaitAxis.gz);
-                                  // var activity = petData.activity;
-                                  // var hartBeat =
-                                  //     double.parse(_hartBeatController.text);
-                                  // var hart = petData.hart;
-                                  // var pulse = petData.pulse;
-                                  // var description = _descriptionController.text;
+                                    
+                                    // var type = _typeController.text;
+                                    // var gender = selectedGender!;
+                                    // var age = int.parse(_ageController.text);
+                                    // var size = selectedSize!;
+                                    // var weight =
+                                    //     double.parse(_weightController.text);
+                                    // var gait = int.parse(_gaitController.text);
+                                    // var axis = GaitAxis(
+                                    //     gx: petData.gaitAxis.gx,
+                                    //     gy: petData.gaitAxis.gy,
+                                    //     gz: petData.gaitAxis.gz);
+                                    // var activity = petData.activity;
+                                    // var hart = petData.hart;
+                                    // var pulse = petData.pulse;
+                                    // var description = _descriptionController.text;
 
-                                  // PetHealth petHealth = PetHealth(
-                                  //   type: type,
-                                  //   gender: gender,
-                                  //   age: age,
-                                  //   size: size,
-                                  //   weight: weight,
-                                  //   gait: gait,
-                                  //   axis: axis,
-                                  //   activity: activity,
-                                  //   hartBeat: hartBeat,
-                                  //   hart: hart,
-                                  //   pulse: pulse,
-                                  //   description: description,
-                                  //   createdAt: DateTime.now(),
-                                  // );
-                                  // petHealthProvider.write(petHealth);
+                                    // set example
+                                    var type = "dog";
+                                    var gender = "암컷";
+                                    var age = 4;
+                                    var size = "소";
+                                    var weight = 9.0;
+                                    var gait = 3;
+                                    var axis = const GaitAxis(gx: -1, gy: -1, gz: 0);
+                                    var activity = 4;
+                                    var hart = 1;
+                                    var pulse = 10;
+                                    var description = "cat is thin";
+
+                                    PetHealth petHealth = PetHealth(
+                                      type: type,
+                                      gender: gender,
+                                      age: age,
+                                      size: size,
+                                      weight: weight,
+                                      gait: gait,
+                                      axis: axis,
+                                      activity: activity,
+                                      pulse: pulse,
+                                      hart: hart,
+                                      description: description,
+                                      createdAt: DateTime.now(),
+                                    );
+                                    petHealthProvider.write(petHealth);
+                                  // }
                                 },
                               ),
                             ),
@@ -309,12 +319,6 @@ class _FormScreenState extends State<FormScreen> {
                 ),
               ),
             ),
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () {},
-            //   child: Image.asset(
-            //     "assets/line-chart.png",
-            //   ),
-            // ),
           ),
         );
       },

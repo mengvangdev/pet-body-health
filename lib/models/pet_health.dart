@@ -50,13 +50,18 @@ class PetHealth {
   }
 
   Map<String, dynamic> toJson() {
+
+    // change GaitAxis to map
+    var axisMap = axis.toJson();
+    var createdAt = this.createdAt.toString();
+
     return {
       "type": type,
       "gender": gender,
       "age": age,
       "size": size,
       "weight": weight,
-      "gait": gait,
+      "gait": axisMap,
       "axis": axis,
       "activity": activity,
       "hartBeat": hartBeat,
