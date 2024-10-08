@@ -2,6 +2,7 @@ export 'package:flutter/material.dart';
 // from pub.dev
 export 'package:dropdown_button2/dropdown_button2.dart';
 export 'package:fl_chart/fl_chart.dart';
+export 'package:getwidget/getwidget.dart';
 // bluetooth
 export 'package:flutter_blue_plus/flutter_blue_plus.dart';
 

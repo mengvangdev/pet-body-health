@@ -37,15 +37,16 @@ class App extends StatelessWidget {
       title: "pet body health",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          textTheme: Theme.of(context).textTheme.apply(
-                fontSizeFactor: 1.4,
-                bodyColor: Colors.black,
-              ),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: themeColor,
-            selectionHandleColor: themeColor,
-          ),
-          focusColor: Colors.red),
+        textTheme: Theme.of(context).textTheme.apply(
+              fontSizeFactor: 1.4,
+              bodyColor: Colors.black,
+            ),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: themeColor,
+          selectionHandleColor: themeColor,
+        ),
+        // focusColor: Colors.red,
+      ),
       home: const MainScreen(),
     );
   }

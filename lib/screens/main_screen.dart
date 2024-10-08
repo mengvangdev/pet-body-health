@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:developer';
-import 'package:getwidget/getwidget.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
 class MainScreen extends StatefulWidget {
@@ -11,7 +10,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isCollapsed = false;
+  bool isCollapsed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -68,30 +67,6 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // Background color of the card
-                      borderRadius: BorderRadius.circular(8), // Rounded corners
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3), // Position of the shadow
-                        ),
-                      ],
-                    ),
-                    child: GFAccordion(
-                      titleChild: Container(
-                        padding: const EdgeInsets.all(
-                            8), // Padding for title content
-                        child: const Text("HEllo"),
-                      ),
-                      content: "Hello",
-                      expandedTitleBackgroundColor: Colors.orange.shade100,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
                       color: themeColor, // Background color of the card
                       borderRadius: BorderRadius.circular(8), // Rounded corners
                       boxShadow: [
@@ -115,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
                       titleChild: Container(
                         padding: const EdgeInsets.all(8),
                         child: Text(
-                          "Flutter",
+                          "Cat",
                           style: TextStyle(
                             color: isCollapsed ? Colors.white : Colors.black,
                           ),
@@ -132,15 +107,55 @@ class _MainScreenState extends State<MainScreen> {
                         color: Colors.black,
                       ),
                       contentBackgroundColor: themeColor,
-                      contentChild: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text("Flutter"),
-                              Text("Unity"),
-                            ],
-                          )
-                        ],
+                      contentChild: SizedBox(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    detail(title: "성별", data: "암컷"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "크기", data: "소"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "걸음걸이", data: "없어요"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "삼박수", data: "없어요"),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    detail(title: "나이", data: "2"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "무게", data: "4"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "활동량", data: "5"),
+                                    const SizedBox(height: 5),
+                                    detail(title: "심박상황", data: "2"),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(
+                              color: Colors.white,
+                              thickness: 2,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: description(
+                                      title: "상태 저장",
+                                      data:
+                                          "1. 강아지가 잠을 자고 있을 때 규칙적으로 숨을 들이 마시고 내시는 것을 관찰합시다. 2. 들이마시고 내시는 것을 1회로 1분 동안 측정합니다."),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -167,5 +182,51 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     });
+  }
+
+  Widget detail({required String title, required String data}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "$title :",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          data,
+          style: const TextStyle(fontSize: 18, color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget description({required String title, required String data}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$title :",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          data,
+          style: const TextStyle(fontSize: 16, color: Colors.white),
+          maxLines: null,
+          softWrap: true,
+          overflow: TextOverflow.clip,
+        ),
+      ],
+    );
   }
 }
