@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
 const List<String> sizeItems = ['소', '중', '대'];
@@ -18,15 +19,18 @@ class _FormScreenState extends State<FormScreen> {
   final _ageController = TextEditingController();
   String? selectedSize;
   final _weightController = TextEditingController();
+  final temperatureController = TextEditingController();
   final _gaitController = TextEditingController();
   var activityController = TextEditingController();
   final pulseController = TextEditingController();
   var hartController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  // validate string
-  RegExp regexString = RegExp(r"^[a-zA-Z\uAC00-\uD7A3]+$");
-  final regexDouble = RegExp(r'^\d+(\.\d+)?$');
+  // validate string : regular expression
+  final regexString = RegExp(r"^[a-zA-Z\uAC00-\uD7A3]+$");
+  final regexWeight = RegExp(r'^\d{1,3}(\.\d{0,2})?$');
+  final regexTemp = RegExp(r'^\d*\.?\d*');
+  final regexAge = RegExp(r'^\d{1,2}$');
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,7 @@ class _FormScreenState extends State<FormScreen> {
         late Pet petData;
         if (petProvider.petData.isNotEmpty) {
           petData = petProvider.petData.last;
+          temperatureController.text = petData.temperature.toString();
           activityController.text = petData.activity.toString();
           pulseController.text = petData.pulse.toString();
           hartController.text = petData.hart.toString();
@@ -80,10 +85,6 @@ class _FormScreenState extends State<FormScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text("종류"),
-                                const Text(
-                                  "종류",
-                                  style: TextStyle(fontSize: 0),
-                                ),
                                 SizedBox(
                                   width: widthScreen * 0.45, // 45% of screen
                                   child: typeField(),
@@ -133,15 +134,25 @@ class _FormScreenState extends State<FormScreen> {
 
                         const SizedBox(height: 10),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text("무게"),
                                 SizedBox(
                                   width: widthScreen * 0.45,
                                   child: weightField(),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("체온"),
+                                SizedBox(
+                                  width: widthScreen * 0.45,
+                                  child: temperatureField(),
                                 ),
                               ],
                             ),
@@ -227,24 +238,24 @@ class _FormScreenState extends State<FormScreen> {
                         const SizedBox(height: 30),
 
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: widthScreen * 0.45,
-                              child: GFButton(
-                                onPressed: () {},
-                                animationDuration: Durations.long1,
-                                buttonBoxShadow: true,
-                                color: themeColor,
-                                textColor: Colors.white,
-                                size: 44,
-                                shape: GFButtonShape.pills,
-                                child: const Text(
-                                  "측정",
-                                  style: TextStyle(fontSize: 24),
-                                ),
-                              ),
-                            ),
+                            // SizedBox(
+                            //   width: widthScreen * 0.45,
+                            //   child: GFButton(
+                            //     onPressed: () {},
+                            //     animationDuration: Durations.long1,
+                            //     buttonBoxShadow: true,
+                            //     color: themeColor,
+                            //     textColor: Colors.white,
+                            //     size: 44,
+                            //     shape: GFButtonShape.pills,
+                            //     child: const Text(
+                            //       "측정",
+                            //       style: TextStyle(fontSize: 24),
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
                               width: widthScreen * 0.45,
                               child: GFButton(
@@ -259,45 +270,36 @@ class _FormScreenState extends State<FormScreen> {
                                   style: TextStyle(fontSize: 24),
                                 ),
                                 onPressed: () {
-                                  // bleProvider.saveData();
-                                  // if (_formKey.currentState!.validate()) {
-                                    log("_formKey");
-                                    
-                                    // var type = _typeController.text;
-                                    // var gender = selectedGender!;
-                                    // var age = int.parse(_ageController.text);
-                                    // var size = selectedSize!;
-                                    // var weight =
-                                    //     double.parse(_weightController.text);
-                                    // var gait = int.parse(_gaitController.text);
-                                    // var axis = GaitAxis(
-                                    //     gx: petData.gaitAxis.gx,
-                                    //     gy: petData.gaitAxis.gy,
-                                    //     gz: petData.gaitAxis.gz);
-                                    // var activity = petData.activity;
-                                    // var hart = petData.hart;
-                                    // var pulse = petData.pulse;
-                                    // var description = _descriptionController.text;
+                                  if (_formKey.currentState!.validate()) {
+                                    // check description
+                                    String? description;
+                                    if (_descriptionController
+                                        .text.isNotEmpty) {
+                                      description = _descriptionController.text;
+                                    }
+                                    var type = _typeController.text;
+                                    var gender = selectedGender!;
+                                    var age = int.parse(_ageController.text);
+                                    var size = selectedSize!;
+                                    var weight =
+                                        double.parse(_weightController.text);
+                                    var temperature = petData.temperature;
+                                    var gait = int.parse(_gaitController.text);
+                                    var axis = GaitAxis(
+                                        gx: petData.gaitAxis.gx,
+                                        gy: petData.gaitAxis.gy,
+                                        gz: petData.gaitAxis.gz);
+                                    var activity = petData.activity;
+                                    var pulse = petData.pulse;
+                                    var hart = petData.hart;
 
-                                    // set example
-                                    var type = "dog";
-                                    var gender = "암컷";
-                                    var age = 4;
-                                    var size = "소";
-                                    var weight = 9.0;
-                                    var gait = 3;
-                                    var axis = const GaitAxis(gx: -1, gy: -1, gz: 0);
-                                    var activity = 4;
-                                    var hart = 1;
-                                    var pulse = 10;
-                                    var description = "cat is thin";
-
-                                    PetHealth petHealth = PetHealth(
+                                    var petHealth = PetHealth(
                                       type: type,
                                       gender: gender,
                                       age: age,
                                       size: size,
                                       weight: weight,
+                                      temperature: temperature,
                                       gait: gait,
                                       axis: axis,
                                       activity: activity,
@@ -307,7 +309,20 @@ class _FormScreenState extends State<FormScreen> {
                                       createdAt: DateTime.now(),
                                     );
                                     petHealthProvider.write(petHealth);
-                                  // }
+                                    log("-------- Successfully ----------");
+
+                                    // reset all value in fields
+                                    _typeController.clear();
+                                    _ageController.clear();
+                                    _weightController.clear();
+                                    _gaitController.clear();
+                                    _descriptionController.clear();
+                                    selectedGender = null;
+                                    selectedSize = null;
+
+                                    // Unfocus all text fields
+                                    FocusScope.of(context).unfocus();
+                                  }
                                 },
                               ),
                             ),
@@ -336,11 +351,14 @@ class _FormScreenState extends State<FormScreen> {
           _typeController.text.isEmpty ? errorColor : focusedColor,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: _typeController.text,
       ),
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate type: $value");
+          return '';
+        }
+        return null;
       },
       onChanged: (value) {
         if (regexString.hasMatch(value)) {
@@ -353,6 +371,10 @@ class _FormScreenState extends State<FormScreen> {
           });
         }
       },
+      //onSaved: (newValue) {
+      // log("save: $newValue");
+      // _typeController.text = newValue!;
+      //},
     );
   }
 
@@ -360,6 +382,7 @@ class _FormScreenState extends State<FormScreen> {
   DropdownButtonFormField2<String> genderField() {
     return DropdownButtonFormField2<String>(
       isExpanded: true,
+      value: selectedGender,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
         enabledBorder: selectedGender != null
@@ -392,16 +415,20 @@ class _FormScreenState extends State<FormScreen> {
               ))
           .toList(),
       validator: (value) {
-        return "";
+        if (value == null || value.isEmpty) {
+          log("validate gender: $value");
+          return '';
+        }
+        return null;
       },
       onChanged: (value) {
         setState(() {
           selectedGender = value;
         });
       },
-      onSaved: (value) {
-        selectedGender = value;
-      },
+      // onSaved: (value) {
+      //   selectedGender = value;
+      // },
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),
@@ -427,28 +454,37 @@ class _FormScreenState extends State<FormScreen> {
   TextFormField ageField() {
     return TextFormField(
       controller: _ageController,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      keyboardType: TextInputType.number,
       cursorHeight: 28,
       cursorColor: _ageController.text.isEmpty ? unfocusedColor : focusedColor,
       cursorErrorColor: _ageController.text.isEmpty ? errorColor : focusedColor,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: _ageController.text,
+        textLength: _ageController.text.length,
       ),
+      inputFormatters: [FilteringTextInputFormatter.allow(regexAge)],
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate age: $value");
+          return '';
+        }
+        return null;
       },
       onChanged: (value) {
-        if (regexDouble.hasMatch(value)) {
+        if (regexAge.hasMatch(value)) {
+          // value is not empty, field is green, validated
+          log(value.toString());
           setState(() {
             // _ageController.text = value;
           });
         } else {
+          // call setState to get invalidated or  error border when field is empty
           setState(() {
             // _ageController.text = value;
           });
         }
+        log(value.length.toString());
       },
     );
   }
@@ -457,6 +493,7 @@ class _FormScreenState extends State<FormScreen> {
   DropdownButtonFormField2<String> sizeField() {
     return DropdownButtonFormField2<String>(
       isExpanded: true,
+      value: selectedSize,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
         enabledBorder: selectedSize != null
@@ -489,7 +526,8 @@ class _FormScreenState extends State<FormScreen> {
               ))
           .toList(),
       validator: (value) {
-        if (value == null) {
+        if (value == null || value.isEmpty) {
+          log("validate size: $value");
           return '';
         }
         return null;
@@ -499,9 +537,9 @@ class _FormScreenState extends State<FormScreen> {
           selectedSize = value;
         });
       },
-      onSaved: (value) {
-        selectedSize = value!;
-      },
+      // onSaved: (value) {
+      //   selectedSize = value!;
+      // },
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),
@@ -535,33 +573,49 @@ class _FormScreenState extends State<FormScreen> {
           _weightController.text.isEmpty ? errorColor : focusedColor,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: true,
+        weightSuffix: true,
         text: _weightController.text,
       ),
+      inputFormatters: [FilteringTextInputFormatter.allow(regexWeight)],
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate weight: $value");
+          return '';
+        }
+        return null;
       },
       onChanged: (value) {
-        if (regexDouble.hasMatch(value) || value.endsWith(".")) {
-          log("regex");
-          setState(() {
-            _weightController.text = value;
-          });
-          Future.delayed(
-            const Duration(milliseconds: 3000),
-            () {
-              if (value.endsWith(".")) {
-                setState(() {
-                  _weightController.text = value.replaceFirst(".", "");
-                });
-              }
-            },
-          );
+        if (regexWeight.hasMatch(value)) {
+          setState(() {});
         } else {
-          log("no regex");
-          setState(() {
-            _weightController.text = "";
-          });
+          setState(() {});
+        }
+      },
+    );
+  }
+
+  // temperature field
+  TextFormField temperatureField() {
+    return TextFormField(
+      controller: temperatureController,
+      readOnly: true,
+      style: const TextStyle(fontSize: 18.0),
+      decoration: inputDecoration(
+        temperatureSuffix: true,
+        text: temperatureController.text,
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          log("validate temperature: $value");
+          return '';
+        }
+        return null;
+      },
+      onChanged: (value) {
+        if (regexTemp.hasMatch(value)) {
+          setState(() {});
+        } else {
+          setState(() {});
         }
       },
     );
@@ -578,11 +632,15 @@ class _FormScreenState extends State<FormScreen> {
           _gaitController.text.isEmpty ? errorColor : focusedColor,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: _gaitController.text,
       ),
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate gait: $value");
+          return '';
+        }
+        return null;
       },
     );
   }
@@ -594,11 +652,14 @@ class _FormScreenState extends State<FormScreen> {
       readOnly: true,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: activityController.text,
       ),
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate activity: $value");
+          return '';
+        }
+        return null;
       },
     );
   }
@@ -607,13 +668,17 @@ class _FormScreenState extends State<FormScreen> {
   TextFormField pulseField() {
     return TextFormField(
       controller: pulseController,
+      readOnly: true,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: pulseController.text,
       ),
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate pulse: $value");
+          return '';
+        }
+        return null;
       },
     );
   }
@@ -625,11 +690,14 @@ class _FormScreenState extends State<FormScreen> {
       readOnly: true,
       style: const TextStyle(fontSize: 18.0),
       decoration: inputDecoration(
-        isSuffix: false,
         text: hartController.text,
       ),
       validator: (value) {
-        return '';
+        if (value == null || value.isEmpty) {
+          log("validate hart: $value");
+          return '';
+        }
+        return null;
       },
     );
   }
@@ -654,7 +722,10 @@ class _FormScreenState extends State<FormScreen> {
   }
 
   InputDecoration inputDecoration(
-      {required bool isSuffix, required String text}) {
+      {required String text,
+      int? textLength,
+      bool? weightSuffix,
+      bool? temperatureSuffix}) {
     return InputDecoration(
       enabledBorder: text.isNotEmpty
           ? stateColor(focusedColor)
@@ -672,8 +743,11 @@ class _FormScreenState extends State<FormScreen> {
         // decoration: TextDecoration.none,
         height: 0,
       ),
-      error: null,
-      suffix: isSuffix ? const Text("Kg") : null,
+      suffix: weightSuffix != null
+          ? const Text("Kg")
+          : temperatureSuffix != null
+              ? const Text("\u00B0C")
+              : null,
     );
   }
 

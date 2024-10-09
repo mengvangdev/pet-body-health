@@ -197,7 +197,7 @@ class BleProvider extends ChangeNotifier {
             2); // Each element starts with index 2 to the end or remove index 0 and 1
         // log("index $i : ${textList[i]}");
       }
-      log(textList.toString());
+      // log("ble Provider line 200 : $textList");
       // textList = ["23.05", "5", "2", "-0.06", "0.04", "-0.02", "0"]
 
       // Convert string to int and double

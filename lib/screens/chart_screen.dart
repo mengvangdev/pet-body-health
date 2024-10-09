@@ -1,3 +1,4 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pet_body_health/resources/resources.dart';
 
 class ChartScreen extends StatelessWidget {
@@ -30,9 +31,12 @@ class ChartScreen extends StatelessWidget {
           ),
           body: connected
               ? const PetData()
-              : const SizedBox(
+              : SizedBox(
                   child: Center(
-                    child: Text("Please connect to device"),
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: themeColor,
+                      size: 40,
+                    ),
                   ),
                 ),
         );
