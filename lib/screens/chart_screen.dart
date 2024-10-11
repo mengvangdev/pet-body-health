@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:pet_body_health/resources/resources.dart';
 
 class ChartScreen extends StatefulWidget {

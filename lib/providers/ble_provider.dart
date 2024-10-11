@@ -9,7 +9,6 @@ class BleProvider extends ChangeNotifier {
   // late BluetoothDevice device;
 
   // this variable is checked when user turns off the Bluetooth adapter from the system.
-  BlueState turnOffState = BlueState.none;
 
   final BluetoothAdapterState _blueState = BluetoothAdapterState.off;
   // get

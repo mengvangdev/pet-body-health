@@ -1,4 +1,0 @@
-enum BlueState {
-  none,
-  isTrue,
-}
