@@ -13,10 +13,13 @@ class ActivityLineCharthartState extends State<ActivityLineChart> {
     return Consumer2<BleProvider, PetProvider>(
       builder: (context, bleProvider, petProvider, child) {
         if (bleProvider.connected && petProvider.petData.isNotEmpty) {
-          final activity = petProvider.petData.last.activity;
           final activities = petProvider.activities;
-          final minY = petProvider.activityMinY;
-          final maxY = petProvider.activityMaxY;
+          final activity = activities.last.y.toInt();
+          final minY = petProvider.actvMinY;
+          final maxY = petProvider.actvMaxY;
+          final minX = activities.first.x;
+          final maxX = activities.last.x;
+          final interval = petProvider.actvInterval;
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -39,8 +42,8 @@ class ActivityLineCharthartState extends State<ActivityLineChart> {
                     LineChartData(
                       minY: minY,
                       maxY: maxY,
-                      minX: activities.first.x,
-                      maxX: activities.last.x,
+                      minX: minX,
+                      maxX: maxX,
                       lineTouchData: const LineTouchData(enabled: false),
                       clipData: const FlClipData.none(),
                       gridData: FlGridData(
@@ -81,7 +84,8 @@ class ActivityLineCharthartState extends State<ActivityLineChart> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: 30,
+                              reservedSize: 40,
+                              interval: interval,
                               getTitlesWidget: (value, meta) {
                                 return leftTitleWidgets(value, meta, activity);
                               }),
@@ -116,63 +120,26 @@ class ActivityLineCharthartState extends State<ActivityLineChart> {
     );
   }
 
+  // set y value
+  String setYValue(int value) {
+    for (int yValue = 0; yValue <= 10; yValue++) {
+      if (value == yValue) {
+        return "$yValue";
+      }
+    }
+    return "";
+  }
+
   Widget leftTitleWidgets(double value, TitleMeta meta, int activity) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
-    String text;
-    if (activity < 5) {
-      switch (value.toInt()) {
-        case 0:
-          text = '0';
-          break;
-        case 1:
-          text = '1';
-          break;
-        case 2:
-          text = '2';
-          break;
-        case 3:
-          text = '3';
-          break;
-        case 4:
-          text = '4';
-          break;
-        case 5:
-          text = "5";
-          break;
-        default:
-          return Container();
-      }
-    } else if (activity >= 5 && activity < 10) {
-      switch (value.toInt()) {
-        case 0:
-          text = '0';
-          break;
-        case 2:
-          text = '2';
-          break;
-        case 4:
-          text = '4';
-          break;
-        case 6:
-          text = '6';
-          break;
-        case 8:
-          text = '8';
-          break;
-        case 10:
-          text = '10';
-          break;
-        default:
-          return Container();
-      }
-    } else {
-      return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
+    String text = setYValue(value.toInt());
+    return SideTitleWidget(
+        axisSide: meta.axisSide,
+        space: 15,
+        child: Text(text, style: style, textAlign: TextAlign.right));
   }
 
   LineChartBarData activityLine(List<FlSpot> points) {

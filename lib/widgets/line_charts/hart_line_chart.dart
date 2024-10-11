@@ -52,67 +52,44 @@ class _HartLineChartState extends State<HartLineChart> {
     });
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta, int hart) {
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
     String text;
-    if (hart < 5) {
-      switch (value.toInt()) {
-        case 0:
-          text = '0';
-          break;
-        case 1:
-          text = '1';
-          break;
-        case 2:
-          text = '2';
-          break;
-        case 3:
-          text = '3';
-          break;
-        case 4:
-          text = '4';
-          break;
-        case 5:
-          text = "5";
-          break;
-        default:
-          return Container();
-      }
-    } else if (hart >= 5 && hart < 10) {
-      switch (value.toInt()) {
-        case 0:
-          text = '0';
-          break;
-        case 2:
-          text = '2';
-          break;
-        case 4:
-          text = '4';
-          break;
-        case 6:
-          text = '6';
-          break;
-        case 8:
-          text = '8';
-          break;
-        case 10:
-          text = '10';
-          break;
-        default:
-          return Container();
-      }
-    } else {
-      return Container();
+    switch (value.toInt()) {
+      case 0:
+        text = '0';
+        break;
+      case 1:
+        text = '1';
+        break;
+      case 2:
+        text = '2';
+        break;
+      case 3:
+        text = '3';
+        break;
+      case 4:
+        text = '4';
+        break;
+      case 5:
+        text = '5';
+        break;
+      default:
+        return Container();
     }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 15,
+      child: Text(text, style: style, textAlign: TextAlign.left),
+    );
   }
 
   LineChartData hartLine(PetProvider petProvider) {
-    final hart = petProvider.petData.last.hart;
     final harts = petProvider.harts;
     final minY = petProvider.hartMinY;
     final maxY = petProvider.hartMaxY;
+    final minX = harts.first.x;
+    final maxX = harts.last.x;
 
     return LineChartData(
       gridData: FlGridData(
@@ -142,14 +119,13 @@ class _HartLineChartState extends State<HartLineChart> {
           sideTitles: SideTitles(
             showTitles: true,
             interval: 1,
-            getTitlesWidget: (value, meta) =>
-                leftTitleWidgets(value, meta, hart),
-            reservedSize: 30,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 40,
           ),
         ),
       ),
-      minX: harts.first.x,
-      maxX: harts.last.x,
+      minX: minX,
+      maxX: maxX,
       minY: minY,
       maxY: maxY,
       lineTouchData: const LineTouchData(enabled: false),

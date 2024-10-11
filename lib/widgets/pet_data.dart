@@ -2,6 +2,7 @@ import 'package:pet_body_health/resources/resources.dart';
 import 'package:pet_body_health/widgets/line_charts/activity_line_chart.dart';
 import 'package:pet_body_health/widgets/line_charts/hart_line_chart.dart';
 import 'package:pet_body_health/widgets/line_charts/pulse_line_chart.dart';
+import 'package:pet_body_health/widgets/radar_charts/gait_radar_chart.dart';
 
 class PetData extends StatelessWidget {
   const PetData({
@@ -22,6 +23,7 @@ class PetData extends StatelessWidget {
                 const HartLineChart(),
                 const PusleLineChart(),
                 const SizedBox(height: 20),
+                const RadarChartSample1(),
                 Padding(
                   padding: const EdgeInsets.all(15),
                   child: Row(

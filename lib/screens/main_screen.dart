@@ -118,8 +118,18 @@ class _DataListViewState extends State<DataListView> {
   @override
   Widget build(BuildContext context) {
     var data = widget.petHealth;
+
+    // change datetime format
     var createdAt = data.createdAt;
     var date = DateFormat('d/MM/yyyy').format(createdAt);
+
+    // change weight #.0 format to int: 2.0 -> 2
+    double weight = data.weight;
+    int? weightInt;
+    if (weight == weight.roundToDouble()) {
+      weightInt = weight.toInt();
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -265,7 +275,7 @@ class _DataListViewState extends State<DataListView> {
         ),
         const SizedBox(width: 10),
         Text(
-          "$data ${title == '무게' ? 'Kg' : ''}${title == '체온' ? '\u00B0C' : ''}",
+          setText(title, data),
           style: const TextStyle(fontSize: 18, color: Colors.white),
         ),
       ],
@@ -295,5 +305,23 @@ class _DataListViewState extends State<DataListView> {
         ),
       ],
     );
+  }
+
+  String setText(String title, String data) {
+    if (title == "무게") {
+      var value = double.parse(data);
+      if (value == value.roundToDouble()) {
+        return "${value.toInt()} Kg";
+      }
+      return "$data Kg";
+    } else if (title == "체온") {
+      var value = double.parse(data);
+      if (value == value.roundToDouble()) {
+        return "${value.toInt()} \u00B0C";
+      }
+      return "$data \u00B0C";
+    } else {
+      return data;
+    }
   }
 }

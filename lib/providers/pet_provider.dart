@@ -22,8 +22,10 @@ class PetProvider extends ChangeNotifier {
 
   // * temperatures
   final tempLitmitCount = 30;
-  final double tempMinY = 15;
-  final double tempMaxY = 40;
+  double tempMinY = 10;
+  double tempMaxY = 40;
+  double tempInterval = 10;
+
   double tempXValue = 0;
   double tempStep = 0.05;
 
@@ -34,27 +36,46 @@ class PetProvider extends ChangeNotifier {
     if (_petData.length > tempLitmitCount) {
       _temperatures.removeAt(0);
     }
+    var temp = _temperatures.last.y;
+    if (temp < 0) {
+      tempMinY = -20;
+      tempMaxY = 40;
+      tempInterval = 10;
+    } else if (temp >= 0 && temp < 20) {
+      tempMinY = 0;
+      tempMaxY = 20;
+      tempInterval = 4;
+    } else if (temp >= 20 && temp < 40) {
+      tempMinY = 0;
+      tempMaxY = 40;
+      tempInterval = 10;
+    }
+
     tempXValue += tempStep;
   }
 
   // * activity
   int activityLimitCount = 10;
-  double activityMinY = 0;
-  double activityMaxY = 5;
-  double activityXValue = 0;
-  double activityStep = 0.05;
+  double actvMinY = 0;
+  double actvMaxY = 5;
+  double actvInterval = 1;
+  double actvXValue = 0;
+  double actvStep = 0.05;
 
   final _activities = <FlSpot>[];
   List<FlSpot> get activities => _activities;
   void _activityGraph() {
-    _activities.add(FlSpot(activityXValue, _petData.last.activity.toDouble()));
+    _activities.add(FlSpot(actvXValue, _petData.last.activity.toDouble()));
     if (_petData.length > activityLimitCount) {
       _activities.removeAt(0);
     }
-    if (_activities.last.y >= 5 && _activities.last.y < 10) {
-      activityMaxY = 10;
+    var actv = _activities.last.y;
+    if (actv <= 5) {
+      actvMaxY = 10;
+    } else if (actv > 5) {
+      actvMaxY = 10;
     }
-    activityXValue += activityStep;
+    actvXValue += actvStep;
   }
 
   // * hart
@@ -71,6 +92,7 @@ class PetProvider extends ChangeNotifier {
     if (_petData.length > hartLimitCount) {
       _harts.removeAt(0);
     }
+
     if (_harts.last.y >= 5 && _harts.last.y < 10) {
       hartMaxY = 10;
     }
@@ -81,6 +103,7 @@ class PetProvider extends ChangeNotifier {
   final pulseLitmitCount = 30;
   final double pulseMinY = 0;
   double pulseMaxY = 10;
+  double pusleInterval = 1;
   double pulseXValue = 0;
   double pulseStep = 0.05;
 
@@ -90,15 +113,46 @@ class PetProvider extends ChangeNotifier {
     _pulses.add(FlSpot(pulseXValue, _petData.last.pulse.toDouble()));
     if (_petData.length > pulseLitmitCount) {
       _petData.removeAt(0);
-
       _pulses.removeAt(0);
     }
-    var length = _pulses.last.y - pulseMaxY;
-    if (length > 0) {
-      pulseMaxY += length;
+    var pulse = _pulses.last.y;
+    if (pulse > pulseMaxY) {
+      if (pulse >= 10 && pulse < 20) {
+        pusleInterval = 5;
+        pulseMaxY = 20;
+      } else if (pulse >= 20 && pulse < 50) {
+        pusleInterval = 10;
+        pulseMaxY = 50;
+      } else if (pulse >= 50 && pulse < 100) {
+        pusleInterval = 20;
+        pulseMaxY = 100;
+      } else if (pulse >= 100 && pulse < 200) {
+        pusleInterval = 50;
+        pulseMaxY = 200;
+      } else if (pulse >= 200 && pulse < 500) {
+        pusleInterval = 100;
+        pulseMaxY = 500;
+      } else if (pulse >= 500 && pulse < 1000) {
+        pusleInterval = 200;
+        pulseMaxY = 1000;
+      } else if (pulse >= 1000 && pulse < 5000) {
+        pusleInterval = 1000;
+        pulseMaxY = 5000;
+      } else if (pulse >= 5000 && pulse < 10000) {
+        pusleInterval = 2000;
+        pulseMaxY = 10000;
+      }
     }
 
     pulseXValue += pulseStep;
+  }
+
+  // gait axis
+  List<double> _gaitAxisData = [];
+  List<double> get gaitAxis => _gaitAxisData;
+  void _gaitAxis() {
+    Map<String, dynamic> map = _petData.last.gaitAxis.toJson();
+    _gaitAxisData = map.values.cast<double>().toList();
   }
 
   void setGraph() {
@@ -106,6 +160,7 @@ class PetProvider extends ChangeNotifier {
     _activityGraph();
     _hartGraph();
     _pulseGraph();
+    _gaitAxis();
     notifyListeners();
   }
 }

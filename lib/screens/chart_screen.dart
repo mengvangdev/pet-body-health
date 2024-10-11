@@ -1,14 +1,44 @@
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'dart:developer';
+
 import 'package:pet_body_health/resources/resources.dart';
 
-class ChartScreen extends StatelessWidget {
+class ChartScreen extends StatefulWidget {
   const ChartScreen({super.key});
+
+  @override
+  State<ChartScreen> createState() => _ChartScreenState();
+}
+
+class _ChartScreenState extends State<ChartScreen> {
+  late Timer timer;
+  String? message;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+      const Duration(milliseconds: 3000),
+      (duration) {
+        setState(() {
+          message =
+              context.read<BleProvider>().connected ? null : "IoT기기에 연결해주세요.";
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BleProvider>(
       builder: (context, bleProvider, child) {
         final connected = bleProvider.connected;
+
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -33,10 +63,19 @@ class ChartScreen extends StatelessWidget {
               ? const PetData()
               : SizedBox(
                   child: Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: themeColor,
-                      size: 40,
-                    ),
+                    child: message == null
+                        ? LoadingAnimationWidget.staggeredDotsWave(
+                            color: themeColor,
+                            size: 40,
+                          )
+                        : Text(
+                            message.toString(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: themeColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ),
                 ),
         );

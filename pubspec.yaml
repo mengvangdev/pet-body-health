@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   dropdown_button2: ^2.3.9
-  expansion_tile_group: ^2.1.0
   fl_chart: ^0.69.0
   flutter:
     sdk: flutter

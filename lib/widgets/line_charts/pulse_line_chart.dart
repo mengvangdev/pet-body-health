@@ -17,11 +17,9 @@ class PusleLineCharthartState extends State<PusleLineChart> {
           final pulses = petProvider.pulses;
           final minY = petProvider.pulseMinY;
           final maxY = petProvider.pulseMaxY;
-
-          // Get max pulse and round it to the nearest higher 10
-          final maxPulse = maxY;
-          final roundedMaxY =
-              (maxPulse / 10).ceil() * 10; // Round up to nearest 10
+          final minX = pulses.first.x;
+          final maxX = pulses.last.x;
+          final interval = petProvider.pusleInterval;
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -43,9 +41,9 @@ class PusleLineCharthartState extends State<PusleLineChart> {
                   child: LineChart(
                     LineChartData(
                       minY: minY,
-                      maxY: roundedMaxY.toDouble(),
-                      minX: pulses.first.x,
-                      maxX: pulses.last.x,
+                      maxY: maxY,
+                      minX: minX,
+                      maxX: maxX,
                       lineTouchData: const LineTouchData(enabled: false),
                       clipData: const FlClipData.none(),
                       gridData: FlGridData(
@@ -86,7 +84,8 @@ class PusleLineCharthartState extends State<PusleLineChart> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 60,
+                            reservedSize: 54,
+                            interval: interval,
                             getTitlesWidget: leftTitleWidgets,
                           ),
                         ),
@@ -120,19 +119,28 @@ class PusleLineCharthartState extends State<PusleLineChart> {
     );
   }
 
+  String setYValue(int value) {
+    for (int yValue = 0; yValue <= 10000; yValue++) {
+      if (value == yValue) {
+        return "$yValue";
+      }
+    }
+    return "";
+  }
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    // Ensure that titles are only multiples of 10
-    if (value % 10 == 0) {
-      return Text(value.toInt().toString(),
-          style: style, textAlign: TextAlign.left);
-    }
-    return const SizedBox.shrink(); // Hide non-multiples of 10
-    // var valueInt = value.toInt();
-    // return Text(valueInt.toString(), style: style, textAlign: TextAlign.left);
+
+    String text = setYValue(value.toInt());
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 5,
+      child: Text(text, style: style, textAlign: TextAlign.right),
+    );
   }
 
   LineChartBarData activityLine(List<FlSpot> points) {
